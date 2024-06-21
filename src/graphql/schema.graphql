@@ -1,0 +1,238 @@
+# Define the Officer type with attributes relevant to police officers
+type Officer {
+id: ID!
+name: String!
+avatarUrl: String
+email: String!
+phone: String!
+rank: String!
+}
+
+# Define the PoliceStation type with attributes for each police station
+type PoliceStation {
+id: ID!
+name: String!
+location: String!
+headOfficer: Officer!
+}
+
+# Define the Task type with attributes for tasks that might be assigned to officers
+type Task {
+id: ID!
+title: String!
+description: String
+dueDate: String
+completed: Boolean
+stage: TaskStage
+officers: [Officer!]!
+checklist: [CheckListItem!]!
+}
+
+# Define the TaskStage type for different stages of tasks
+type TaskStage {
+id: ID!
+title: String!
+}
+
+# Define the CheckListItem type for checklist items within a task
+type CheckListItem {
+title: String!
+checked: Boolean
+}
+
+# Define the Event type for events in the system
+type Event {
+id: ID!
+title: String!
+color: String
+startDate: String!
+endDate: String!
+}
+
+# Define the Theme type for themes and sub-themes in the system
+type Theme {
+id: ID!
+title: String!
+description: String
+}
+
+# Define the Query type for fetching data
+type Query {
+officers(filter: OfficerFilter, sorting: [OfficerSort], paging: OffsetPaging): OfficerConnection
+policeStations(filter: PoliceStationFilter, sorting: [PoliceStationSort], paging: OffsetPaging): PoliceStationConnection
+tasks(filter: TaskFilter, sorting: [TaskSort], paging: OffsetPaging): TaskConnection
+events(filter: EventFilter, sorting: [EventSort], paging: OffsetPaging): EventConnection
+themes(filter: ThemeFilter, sorting: [ThemeSort], paging: OffsetPaging): ThemeConnection
+}
+
+# Filters, sorting, and pagination inputs
+
+input OfficerFilter {
+search: String
+rank: String
+}
+
+input PoliceStationFilter {
+search: String
+headOfficerId: ID
+}
+
+input TaskFilter {
+search: String
+completed: Boolean
+stageId: ID
+}
+
+input EventFilter {
+search: String
+startDate: String
+endDate: String
+}
+
+input ThemeFilter {
+search: String
+}
+
+input OffsetPaging {
+limit: Int!
+offset: Int!
+}
+
+enum OfficerSort {
+NAME_ASC
+NAME_DESC
+RANK_ASC
+RANK_DESC
+}
+
+enum PoliceStationSort {
+NAME_ASC
+NAME_DESC
+LOCATION_ASC
+LOCATION_DESC
+}
+
+enum TaskSort {
+TITLE_ASC
+TITLE_DESC
+DUE_DATE_ASC
+DUE_DATE_DESC
+}
+
+enum EventSort {
+START_DATE_ASC
+START_DATE_DESC
+END_DATE_ASC
+END_DATE_DESC
+}
+
+enum ThemeSort {
+ TITLE_ASC
+ TITLE_DESC
+}
+
+# Connections for pagination results
+type OfficerConnection {
+ nodes: [Officer!]!
+ totalCount: Int!
+}
+
+type PoliceStationConnection {
+ nodes: [PoliceStation!]!
+ totalCount: Int!
+}
+
+type TaskConnection {
+ nodes: [Task!]!
+ totalCount: Int!
+}
+
+type EventConnection {
+ nodes: [Event!]!
+ totalCount: Int!
+}
+
+type ThemeConnection {
+ nodes: [Theme!]!
+ totalCount: Int!
+}
+
+# Define the Mutation type for modifying data
+type Mutation {
+ updateOneOfficer(input: UpdateOneOfficerInput!): Officer
+ createOnePoliceStation(input: CreateOnePoliceStationInput!): PoliceStation
+ updateOnePoliceStation(input: UpdateOnePoliceStationInput!): PoliceStation
+ createOneTask(input: CreateOneTaskInput!): Task
+ updateOneTask(input: UpdateOneTaskInput!): Task
+ createOneEvent(input: CreateOneEventInput!): Event
+ updateOneEvent(input: UpdateOneEventInput!): Event
+ createOneTheme(input: CreateOneThemeInput!): Theme
+ updateOneTheme(input: UpdateOneThemeInput!): Theme
+}
+
+# Input types for mutations
+
+input UpdateOneOfficerInput {
+ id: ID!
+ name: String
+ avatarUrl: String
+ email: String
+ phone: String
+ rank: String
+}
+
+input CreateOnePoliceStationInput {
+ name: String!
+ location: String!
+ headOfficerID: ID!
+}
+
+input UpdateOnePoliceStationInput {
+ id: ID!
+ name: String
+ location: String
+}
+
+input CreateOneTaskInput {
+ title: String!
+ description: String
+ dueDate: String
+ stageID: ID
+ officerIDs: [ID!]
+}
+
+input UpdateOneTaskInput {
+ id: ID!
+ title: String
+ description: String
+ dueDate: String
+ completed: Boolean
+ stageID: ID
+ officerIDs: [ID!]
+}
+
+input CreateOneEventInput {
+ title: String!
+ color: String
+ startDate: String!
+ endDate: String!
+}
+
+input UpdateOneEventInput {
+ id: ID!
+ title: String
+ color: String
+ startDate: String
+ endDate: String
+}
+
+input CreateOneThemeInput {
+ title: String!
+ description: String
+}
+
+input UpdateOneThemeInput {
+ id: ID!
+ title: String
+ description: String
+}
